@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,9 @@ public class ClienteController {
 	@Autowired
 	private ClienteRepository clienteRepository;
 	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	
 	// Obtém todos os clientes.
 	@GetMapping("/clientes")
@@ -37,6 +41,7 @@ public class ClienteController {
 	// Cria um novo cliente.
 	@PostMapping("/clientes")
 	public Cliente criaCliente(@Valid @RequestBody Cliente cliente) {
+		cliente.setSenha(bCryptPasswordEncoder.encode(cliente.getSenha()));
 		return clienteRepository.save(cliente);
 	}
 	
